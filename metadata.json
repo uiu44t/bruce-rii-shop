@@ -1,0 +1,6 @@
+{
+  "name": "Hospital Management System",
+  "description": "National & International Healthcare Platform with Rwanda National ID (NIDA) Integration, Emergency Facility Locator, Real-Time Bed Exchange, E-Prescription Safety Checks, Chronic Care Cohorts, EPI Child Immunization Registry, International Medical Travel Concierge, RHIE & Zipline Autonomous Drones, and Law N° 058/2021 Security Compliance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

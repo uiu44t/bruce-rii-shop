@@ -1,0 +1,48 @@
+# UBUZIMA HMS local infrastructure (development)
+# Requires Docker/Compose. External government/payment integrations remain disabled/simulated unless authorized.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ubuzima_hms
+      POSTGRES_USER: ubuzima
+      POSTGRES_PASSWORD: ubuzima_dev_password_change_me
+    ports:
+      - "5432:5432"
+    volumes:
+      - ubuzima_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ubuzima -d ubuzima_hms"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ubuzima_redis:/data
+
+  app:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://ubuzima:ubuzima_dev_password_change_me@postgres:5432/ubuzima_hms?schema=public
+      REDIS_URL: redis://redis:6379
+      NODE_ENV: production
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+volumes:
+  ubuzima_pg:
+  ubuzima_redis:
